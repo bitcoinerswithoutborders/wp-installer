@@ -1,30 +1,68 @@
 #!/bin/bash
 #make:
 
-.PHONY: 
+dir_name=wp
+database_name=db_name_2306
+database_table_prefix=db_table_prefix
+
+.PHONY:
 	clean
 	db
 	update
+	plugins
+	themes
+	install
 
-all:
-	git clone git@github.com:bitcoinerswithoutborders/wp
+all: update 
 
-	cd ./wp/ \
-	&& git submodule add -b members git@github.com:bitcoinfoundation/btcf_classic c/themes/btcf_classic \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin c/lib/bwb-admin \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members c/lib/bwb-members \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff c/lib/bwb-staff \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/timber c/lib/timber \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less c/lib/wp-less \
-	&& git submodule update --init; \
-	
+install: plugins themes update db
+
+plugins:
+	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
+
+	cd ./${dir_name}/c/lib \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
+	&& git submodule update --init \
+
+	&& wget https://downloads.wordpress.org/plugin/buddypress.2.0.1.zip \
+	&& unzip c/lib/buddypress.2.0.1.zip && rm /c/libbuddypress.2.0.1.zip \
+	&& wget http://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
+	&& unzip c/lib/advanced-custom-fields.zip && rm /c/lib/advanced-custom-fields.zip \
+	&& wget http://downloads.wordpress.org/plugin/webriti-smtp-mail.1.2.zip \
+	&& unzip c/lib/webriti-smtp-mail.1.2.zip && rm /c/lib/webriti-smtp-mail.1.2.zip \
+	&& wget http://downloads.wordpress.org/plugin/regenerate-thumbnails.zip \
+	&& unzip c/lib/regenerate-thumbnails.zip && rm /c/lib/regenerate-thumbnails.zip \
+	&& wget http://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
+	&& unzip c/lib/wordpress-mu-domain-mapping.0.5.4.3.zip && rm /c/lib/wordpress-mu-domain-mapping.0.5.4.3.zip \
+	#missing here:
+	# logout-redirect => wpmu
+	# membership => wpmu
+
+themes:
+	cd ./${dir_name}/c/themes \
+	&& git submodule add -b members git@github.com:bitcoinfoundation/btcf_classic \
+	&& git submodule add -b members git@github.com:bitcoinfoundation/bwbmembers \
+
+
 update:
-	cd ./wp/ \
+	cd ./${dir_name}/ \
 	&& git pull \
 	&& git submodule update
 
 db:
-	php -f db.php
+	mkdir -p build
+
+	cp db.php build/db.php
+	sed -i "s%|database_name|%${database_name}%g" build/db.php
+	php -f build/db.php
+
+	cp db.sql build/db.sql
+	sed -i "s%|new_table_prefix|%${database_table_prefix}%g" build/db.sql
+	mysql -u root ${database_name} < build/db.sql
 
 clean:
-	rm -rf ./wp
+	rm -rf ./${dir_name}
