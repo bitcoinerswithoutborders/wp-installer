@@ -20,7 +20,7 @@ site_protocol=http://
 
 all: update 
 
-install: wp update db
+install: wp wpconfig update db
 
 wp:
 	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
@@ -68,6 +68,7 @@ db:
 	sed -i "s%|database_name|%${database_name}%g" build/db.php
 	sed -i "s%|database_user|%${database_user}%g" build/db.php
 	sed -i "s%|database_pw|%${database_pw}%g" build/db.php
+	sed -i "s%|database_host|%${database_host}%g" build/db.php
 	php -f build/db.php
 
 	cp db.sql build/db.sql
