@@ -20,12 +20,10 @@ site_protocol=http://
 
 all: update 
 
-install: wp wpconfig update db
+install: wp plugins themes wpconfig update db
 
 wp:
 	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
-	themes
-	plugins
 
 plugins:
 	cd ./${dir_name}/c/lib \
@@ -35,7 +33,6 @@ plugins:
 	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
 	&& git submodule update --init \
-
 	&& wget https://downloads.wordpress.org/plugin/buddypress.2.0.1.zip \
 	&& unzip c/lib/buddypress.2.0.1.zip && rm /c/libbuddypress.2.0.1.zip \
 	&& wget http://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
@@ -46,9 +43,11 @@ plugins:
 	&& unzip c/lib/regenerate-thumbnails.zip && rm /c/lib/regenerate-thumbnails.zip \
 	&& wget http://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
 	&& unzip c/lib/wordpress-mu-domain-mapping.0.5.4.3.zip && rm /c/lib/wordpress-mu-domain-mapping.0.5.4.3.zip \
+	&& wget http://downloads.wordpress.org/plugin/wp-email-login.zip \
+	&& unzip c/lib/wp-email-login.zip && rm /c/lib/wp-email-login.zip \
 	#missing here:
-	# logout-redirect => wpmu
-	# membership => wpmu
+	# logout-redirect wpmu
+	# membership wpmu
 
 themes:
 	cd ./${dir_name}/c/themes \
