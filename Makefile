@@ -2,8 +2,13 @@
 #make:
 
 dir_name=wp
+database_user=root
+database_pw=
+database_host=localhost
 database_name=db_name_2306
 database_table_prefix=db_table_prefix
+site_url=ma.ke
+site_protocol=http://
 
 .PHONY:
 	clean
@@ -15,11 +20,14 @@ database_table_prefix=db_table_prefix
 
 all: update 
 
-install: plugins themes update db
+install: wp update db
+
+wp:
+	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
+	themes
+	plugins
 
 plugins:
-	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
-
 	cd ./${dir_name}/c/lib \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
@@ -51,18 +59,48 @@ themes:
 update:
 	cd ./${dir_name}/ \
 	&& git pull \
-	&& git submodule update
+	&& git submodule update \
 
 db:
 	mkdir -p build
 
 	cp db.php build/db.php
 	sed -i "s%|database_name|%${database_name}%g" build/db.php
+	sed -i "s%|database_user|%${database_user}%g" build/db.php
+	sed -i "s%|database_pw|%${database_pw}%g" build/db.php
 	php -f build/db.php
 
 	cp db.sql build/db.sql
-	sed -i "s%|new_table_prefix|%${database_table_prefix}%g" build/db.sql
+	sed -i "s%|database_table_prefix|%${database_table_prefix}%g" build/db.sql
+	sed -i "s%|site_url|%${site_url}%g" build/db.sql
+	
+	sed -i "s%|database_user|%${database_user}%g" build/db.sql
+	sed -i "s%|database_pw|%${database_pw}%g" build/db.sql
+
 	mysql -u root ${database_name} < build/db.sql
 
+wpconfig:
+	echo "wpconfig is not working correctly. look into wp/wp-config.php at the auth keys."
+
+	cp wp/wp-config-sample.php wp/wp-config.php
+	sed -i "s%|AUTH_KEY|%define('AUTH_KEY', '${shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+'}');%" wp/wp-config.php
+	sed -i "s%|SECURE_AUTH_KEY|%define('SECURE_AUTH_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" wp/wp-config.php
+	sed -i "s%|LOGGED_IN_KEY|%define('LOGGED_IN_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" wp/wp-config.php
+	sed -i "s%|NONCE_KEY|%define('NONCE_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" wp/wp-config.php
+	sed -i "s%|AUTH_SALT|%define('AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" wp/wp-config.php
+	sed -i "s%|SECURE_AUTH_SALT|%define('SECURE_AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" wp/wp-config.php
+	sed -i "s%|LOGGED_IN_SALT|%define('LOGGED_IN_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" wp/wp-config.php
+	sed -i "s%|NONCE_SALT|%define('NONCE_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" wp/wp-config.php
+
+	sed -i "s%|site_url|%${site_url}%g" wp/wp-config.php
+
+	sed -i "s%|database_name|%${database_name}%g" wp/wp-config.php
+	sed -i "s%|database_user|%${database_user}%g" wp/wp-config.php
+	sed -i "s%|database_pw|%${database_pw}%g" wp/wp-config.php
+	sed -i "s%|database_host|%${database_host}%g" wp/wp-config.php
+	
+	sed -i "s%|database_table_prefix|%${database_table_prefix}%g" wp/wp-config.php
+	
+	
 clean:
-	rm -rf ./${dir_name}
+	rm -rf ./${dir_name} ./build
