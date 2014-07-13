@@ -85,22 +85,25 @@ update:
 
 db:
 	mkdir -p build
-
-	cp db.php build/db.php
-	sed -i "s%|database_name|%${database_name}%g" build/db.php
-	sed -i "s%|database_user|%${database_user}%g" build/db.php
-	sed -i "s%|database_pw|%${database_pw}%g" build/db.php
-	sed -i "s%|database_host|%${database_host}%g" build/db.php
-	php -f build/db.php
+	
+	#cp db.php build/db.php
+	#sed -i "s%|database_name|%${database_name}%g" build/db.php
+	#sed -i "s%|database_user|%${database_user}%g" build/db.php
+	#sed -i "s%|database_pw|%${database_pw}%g" build/db.php
+	#sed -i "s%|protocol|%${protocol}%g" build/db.php
+	#sed -i "s%|database_host|%${database_host}%g" build/db.php
+	#php -f build/db.php
 
 	cp db.sql build/db.sql
 	sed -i "s%|database_table_prefix|%${database_table_prefix}%g" build/db.sql
+	sed -i "s%|protocol|%${protocol}%g" build/db.sql
 	sed -i "s%|site_url|%${site_url}%g" build/db.sql
 	
+	sed -i "s%|database_name|%${database_name}%g" build/db.sql
 	sed -i "s%|database_user|%${database_user}%g" build/db.sql
 	sed -i "s%|database_pw|%${database_pw}%g" build/db.sql
 
-	mysql -u root ${database_name} < build/db.sql
+	mysql -u root < build/db.sql
 
 wpconfig:
 	echo "wpconfig is not working correctly. look into ${dir_name}/wp-config.php at the auth keys."
@@ -115,6 +118,7 @@ wpconfig:
 	sed -i "s%|LOGGED_IN_SALT|%define('LOGGED_IN_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" ${dir_name}/wp-config.php
 	sed -i "s%|NONCE_SALT|%define('NONCE_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" ${dir_name}/wp-config.php
 
+	sed -i "s%|protocol|%${protocol}%g" ${dir_name}/wp-config.php
 	sed -i "s%|site_url|%${site_url}%g" ${dir_name}/wp-config.php
 
 	sed -i "s%|database_name|%${database_name}%g" ${dir_name}/wp-config.php
