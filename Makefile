@@ -1,5 +1,4 @@
 #!/bin/bash
-#make:
 
 dir_name=wp
 database_user=root
@@ -27,33 +26,54 @@ wp:
 
 plugins:
 	cd ./${dir_name}/c/lib \
+	&& wget https://downloads.wordpress.org/plugin/buddypress.2.0.1.zip \
+	&& unzip ./buddypress.2.0.1.zip && rm ./buddypress.2.0.1.zip \
+	&& wget http://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
+	&& unzip ./advanced-custom-fields.zip && rm ./advanced-custom-fields.zip \
+	&& wget http://downloads.wordpress.org/plugin/webriti-smtp-mail.1.2.zip \
+	&& unzip ./webriti-smtp-mail.1.2.zip && rm ./webriti-smtp-mail.1.2.zip \
+	&& wget http://downloads.wordpress.org/plugin/regenerate-thumbnails.zip \
+	&& unzip ./regenerate-thumbnails.zip && rm ./regenerate-thumbnails.zip \
+	&& wget http://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
+	&& unzip ./wordpress-mu-domain-mapping.0.5.4.3.zip && rm ./wordpress-mu-domain-mapping.0.5.4.3.zip \
+	&& wget http://downloads.wordpress.org/plugin/wp-email-login.zip \
+	&& unzip ./wp-email-login.zip && rm ./wp-email-login.zip \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
 	&& git submodule update --init \
-	&& wget https://downloads.wordpress.org/plugin/buddypress.2.0.1.zip \
-	&& unzip c/lib/buddypress.2.0.1.zip && rm /c/libbuddypress.2.0.1.zip \
-	&& wget http://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
-	&& unzip c/lib/advanced-custom-fields.zip && rm /c/lib/advanced-custom-fields.zip \
-	&& wget http://downloads.wordpress.org/plugin/webriti-smtp-mail.1.2.zip \
-	&& unzip c/lib/webriti-smtp-mail.1.2.zip && rm /c/lib/webriti-smtp-mail.1.2.zip \
-	&& wget http://downloads.wordpress.org/plugin/regenerate-thumbnails.zip \
-	&& unzip c/lib/regenerate-thumbnails.zip && rm /c/lib/regenerate-thumbnails.zip \
-	&& wget http://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
-	&& unzip c/lib/wordpress-mu-domain-mapping.0.5.4.3.zip && rm /c/lib/wordpress-mu-domain-mapping.0.5.4.3.zip \
-	&& wget http://downloads.wordpress.org/plugin/wp-email-login.zip \
-	&& unzip c/lib/wp-email-login.zip && rm /c/lib/wp-email-login.zip \
-	#missing here:
-	# logout-redirect wpmu
-	# membership wpmu
-
+	#missing here: logout-redirect wpmu membership wpmu
+	
 themes:
-	cd ./${dir_name}/c/themes \
-	&& git submodule add -b members git@github.com:bitcoinfoundation/btcf_classic \
-	&& git submodule add -b members git@github.com:bitcoinfoundation/bwbmembers \
+	cd ./${dir_name}c/themes \
+	&& git submodule add -b members git@github.com:bitcoinfoundation/btcf_classic 
+	&& git submodule add -b members git@github.com:bitcoinfoundation/bwb-bp-theme bwbmembers \
 
+
+uninstall: uninstall plugins uninstall_themes
+
+
+uninstall_plugins:
+	cd ./wp/c/lib \
+	&& rm -rf \
+		./buddypress  \
+		./advanced-custom-fields \
+		./webriti-smtp-mail \
+		./regenerate-thumbnails \
+		./wordpress-mu-domain-mapping \
+		./wp-email-login \
+	&& git submodule deinit bwb-admin \
+	&& git submodule deinit bwb-members \
+	&& git submodule deinit bwb-staff \
+	&& git submodule deinit timber \
+	&& git submodule deinit wp-less \
+
+uninstall_themes:
+	cd ./wp/c/themes \
+	&& git submodule deinit btcf_classic \
+	&& git submodule deinit bwb_members \
 
 update:
 	cd ./${dir_name}/ \
