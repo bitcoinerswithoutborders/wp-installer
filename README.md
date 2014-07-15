@@ -1,29 +1,28 @@
 wp-installer
 ============
 
+Some of the repositories this repository has as submodule are not public (yet).
+
+Contact dev@bwb.is if you should have access but have not.
+
 Our wordpress install repository.
 
 installation instructions:
 
     git clone git@github.com:bitcoinerswithoutborders/wp-installer
     cd wp-installer
-    make
+    make install
 
 
 this will:
 
 git clone git@github.com:bitcoinerswithoutborders/wp
 
-add all needed plugins and themes as submodules, init and update them
+add all needed plugins and themes as submodules or via wget, 
+and git submodule update --init them.
 
-create the database needed for wordpress
 
-//todo:
-add .sql file with bootstrap data
+make will just update the environment each time you call it.
 
-activate wordpress by
 
-setting the database user, password, server and other variables in it,
-regenerating the auth keys
-copying wp-config-sample.php to wp-config.php
 
