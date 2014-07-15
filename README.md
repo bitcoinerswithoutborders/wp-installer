@@ -1,11 +1,11 @@
 wp-installer
 ============
 
-Some of the repositories this repository has as submodule are not public (yet).
+This is our wordpress install repository.
+
+Some of the repositories this repository has as submodules are not public (yet).
 
 Contact dev@bwb.is if you should have access but have not.
-
-Our wordpress install repository.
 
 installation instructions:
 
