@@ -87,18 +87,21 @@ db:
 	mkdir -p build
 
 	cp db.php build/db.php
-	sed -i "s%|database_name|%${database_name}%g" build/db.php
-	sed -i "s%|database_user|%${database_user}%g" build/db.php
-	sed -i "s%|database_pw|%${database_pw}%g" build/db.php
-	sed -i "s%|database_host|%${database_host}%g" build/db.php
+	sed -i \
+		-e "s%|database_name|%${database_name}%g" \
+		-e "s%|database_user|%${database_user}%g" \
+		-e "s%|database_pw|%${database_pw}%g" \
+		-e "s%|database_host|%${database_host}%g" \
+		build/db.php
 	php -f build/db.php
 
 	cp db.sql build/db.sql
-	sed -i "s%|database_table_prefix|%${database_table_prefix}%g" build/db.sql
-	sed -i "s%|site_url|%${site_url}%g" build/db.sql
-	
-	sed -i "s%|database_user|%${database_user}%g" build/db.sql
-	sed -i "s%|database_pw|%${database_pw}%g" build/db.sql
+	sed -i \
+		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
+		-e "s%|site_url|%${site_url}%g" \
+		-e "s%|database_user|%${database_user}%g" \
+		-e "s%|database_pw|%${database_pw}%g" \
+		build/db.sql
 
 	mysql -u root ${database_name} < build/db.sql
 
@@ -106,24 +109,27 @@ wpconfig:
 	echo "wpconfig is not working correctly. look into ${dir_name}/wp-config.php at the auth keys."
 
 	cp ${dir_name}/wp-config-sample.php ${dir_name}/wp-config.php
-	sed -i "s%|AUTH_KEY|%define('AUTH_KEY', '${shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+'}');%" ${dir_name}/wp-config.php
-	sed -i "s%|SECURE_AUTH_KEY|%define('SECURE_AUTH_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" ${dir_name}/wp-config.php
-	sed -i "s%|LOGGED_IN_KEY|%define('LOGGED_IN_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" ${dir_name}/wp-config.php
-	sed -i "s%|NONCE_KEY|%define('NONCE_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" ${dir_name}/wp-config.php
-	sed -i "s%|AUTH_SALT|%define('AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" ${dir_name}/wp-config.php
-	sed -i "s%|SECURE_AUTH_SALT|%define('SECURE_AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" ${dir_name}/wp-config.php
-	sed -i "s%|LOGGED_IN_SALT|%define('LOGGED_IN_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" ${dir_name}/wp-config.php
-	sed -i "s%|NONCE_SALT|%define('NONCE_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" ${dir_name}/wp-config.php
+	sed -i \
+		-e "s%|AUTH_KEY|%define('AUTH_KEY', '${shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+'}');%" \
+		-e "s%|SECURE_AUTH_KEY|%define('SECURE_AUTH_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
+		-e "s%|LOGGED_IN_KEY|%define('LOGGED_IN_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
+		-e "s%|NONCE_KEY|%define('NONCE_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
+		-e "s%|AUTH_SALT|%define('AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
+		-e "s%|SECURE_AUTH_SALT|%define('SECURE_AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
+		-e "s%|LOGGED_IN_SALT|%define('LOGGED_IN_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
+		-e "s%|NONCE_SALT|%define('NONCE_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
 
-	sed -i "s%|site_url|%${site_url}%g" ${dir_name}/wp-config.php
+		-e "s%|site_url|%${site_url}%g" \
 
-	sed -i "s%|database_name|%${database_name}%g" ${dir_name}/wp-config.php
-	sed -i "s%|database_user|%${database_user}%g" ${dir_name}/wp-config.php
-	sed -i "s%|database_pw|%${database_pw}%g" ${dir_name}/wp-config.php
-	sed -i "s%|database_host|%${database_host}%g" ${dir_name}/wp-config.php
+		-e "s%|database_name|%${database_name}%g" \
+		-e "s%|database_user|%${database_user}%g" \
+		-e "s%|database_pw|%${database_pw}%g" \
+		-e "s%|database_host|%${database_host}%g" \
 	
-	sed -i "s%|database_table_prefix|%${database_table_prefix}%g" ${dir_name}/wp-config.php
+		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
+		${dir_name}/wp-config.php
 	
 	
 clean:
 	rm -rf ./${dir_name} ./build
+
