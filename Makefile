@@ -118,14 +118,11 @@ wpconfig:
 		-e "s%|SECURE_AUTH_SALT|%define('SECURE_AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
 		-e "s%|LOGGED_IN_SALT|%define('LOGGED_IN_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
 		-e "s%|NONCE_SALT|%define('NONCE_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
-
 		-e "s%|site_url|%${site_url}%g" \
-
 		-e "s%|database_name|%${database_name}%g" \
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
 		-e "s%|database_host|%${database_host}%g" \
-	
 		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
 		${dir_name}/wp-config.php
 	
