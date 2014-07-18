@@ -39,13 +39,15 @@ plugins:
 	&& wget http://downloads.wordpress.org/plugin/wp-email-login.zip \
 	&& unzip -o ./wp-email-login.zip && rm ./wp-email-login.zip \
 
-submdoules:
+submodules:
 	cd ./${dir_name}/c/lib \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-members-authentication-bridge \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-ip.board-user-bridge \
 	&& git submodule update --init \
 	#missing here: logout-redirect, membership
 	
@@ -72,6 +74,8 @@ uninstall_plugins:
 	&& git submodule deinit bwb-staff \
 	&& git submodule deinit timber \
 	&& git submodule deinit wp-less \
+	&& git submodule deinit wp-members-authentication-bridge \
+	&& git submodule deinit wp-ip.board-user-bridge \
 
 uninstall_themes:
 	cd ./${dir_name}/c/themes \
