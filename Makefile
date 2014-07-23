@@ -22,6 +22,7 @@ all: update
 install: wp plugins wpconfig update db
 
 wp:
+	mkdir -p ${dir_name}
 	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
 
 plugins:
