@@ -5,9 +5,13 @@ database_user=root
 database_pw=
 database_host=localhost
 database_name=db_name_2305
-database_table_prefix=db_table_prefix
-site_url=ma.ke
-site_protocol=http://
+database_table_prefix=db_table_prefix_
+root_url=er.is
+members_url=mem.bers
+whiteboard_url=n.ew
+
+protocol=http://
+
 
 .PHONY:
 	clean
