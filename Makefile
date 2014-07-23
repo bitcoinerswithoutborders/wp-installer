@@ -111,7 +111,6 @@ db:
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
 		build/db.sql
->>>>>>> mikefix
 
 	mysql -u root < build/db.sql
 
