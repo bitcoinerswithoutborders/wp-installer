@@ -9,9 +9,7 @@ database_table_prefix=db_table_prefix_
 root_url=er.is
 members_url=mem.bers
 whiteboard_url=n.ew
-
 protocol=http://
-
 
 .PHONY:
 	wp
@@ -27,10 +25,13 @@ protocol=http://
 	clean
 
 
-
 all: update 
 
-install: wp plugins wpconfig update db
+install: wp plugins submodules wpconfig update db
+
+uninstall: uninstall_plugins uninstall_themes
+
+
 
 wp:
 	mkdir -p ${dir_name}
@@ -71,7 +72,6 @@ themes:
 	&& git submodule add -b members git@github.com:bitcoinfoundation/bwb-bp-theme bwbmembers \
 
 
-uninstall: uninstall_plugins uninstall_themes
 
 
 uninstall_plugins:
