@@ -33,33 +33,37 @@ plugins:
 	cd ./${dir_name}/c/lib \
 	&& wget https://downloads.wordpress.org/plugin/buddypress.2.0.1.zip \
 	&& unzip -o ./buddypress.2.0.1.zip && rm ./buddypress.2.0.1.zip \
-	&& wget http://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
+	&& wget https://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
 	&& unzip -o ./advanced-custom-fields.zip && rm ./advanced-custom-fields.zip \
-	&& wget http://downloads.wordpress.org/plugin/webriti-smtp-mail.1.2.zip \
+	&& wget https://downloads.wordpress.org/plugin/webriti-smtp-mail.1.2.zip \
 	&& unzip -o ./webriti-smtp-mail.1.2.zip && rm ./webriti-smtp-mail.1.2.zip \
-	&& wget http://downloads.wordpress.org/plugin/regenerate-thumbnails.zip \
+	&& wget https://downloads.wordpress.org/plugin/regenerate-thumbnails.zip \
 	&& unzip -o ./regenerate-thumbnails.zip && rm ./regenerate-thumbnails.zip \
-	&& wget http://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
+	&& wget https://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
 	&& unzip -o ./wordpress-mu-domain-mapping.0.5.4.3.zip && rm ./wordpress-mu-domain-mapping.0.5.4.3.zip \
-	&& wget http://downloads.wordpress.org/plugin/wp-email-login.zip \
+	&& wget https://downloads.wordpress.org/plugin/wp-email-login.zip \
 	&& unzip -o ./wp-email-login.zip && rm ./wp-email-login.zip \
+	&& wget https://downloads.wordpress.org/plugin/timber-library.zip \
+	&& unzip -o ./timber-library.zip && rm ./timber-library.zip.zip \
 
 submodules:
 	cd ./${dir_name}/c/lib \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
+	#&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-members-authentication-bridge \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-ip.board-user-bridge \
+	&& git submodule add git@github.com:benhuson/countries \
 	&& git submodule update --init \
 	#missing here: membership
-	
+
 themes:
 	cd ./${dir_name}/c/themes \
 	&& git submodule add -b members git@github.com:bitcoinfoundation/btcf_classic 
 	&& git submodule add -b members git@github.com:bitcoinfoundation/bwb-bp-theme bwbmembers \
+
 
 uninstall: uninstall_plugins uninstall_themes
 
