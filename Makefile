@@ -54,13 +54,12 @@ submodules:
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-members-authentication-bridge \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-ip.board-user-bridge \
 	&& git submodule update --init \
-	#missing here: logout-redirect, membership
+	#missing here: membership
 	
 themes:
 	cd ./${dir_name}/c/themes \
 	&& git submodule add -b members git@github.com:bitcoinfoundation/btcf_classic 
 	&& git submodule add -b members git@github.com:bitcoinfoundation/bwb-bp-theme bwbmembers \
-
 
 uninstall: uninstall_plugins uninstall_themes
 
