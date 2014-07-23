@@ -4,7 +4,7 @@ dir_name=wp
 database_user=root
 database_pw=
 database_host=localhost
-database_name=db_name_2306
+database_name=db_name_2305
 database_table_prefix=db_table_prefix
 site_url=ma.ke
 site_protocol=http://
@@ -40,7 +40,7 @@ plugins:
 	&& wget http://downloads.wordpress.org/plugin/wp-email-login.zip \
 	&& unzip -o ./wp-email-login.zip && rm ./wp-email-login.zip \
 
-submdoules:
+submodules:
 	cd ./${dir_name}/c/lib \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
@@ -48,7 +48,7 @@ submdoules:
 	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
 	&& git submodule update --init \
-	#missing here: logout-redirect wpmu membership wpmu
+	#missing here: logout-redirect, membership
 	
 themes:
 	cd ./${dir_name}/c/themes \
