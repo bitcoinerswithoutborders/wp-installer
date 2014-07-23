@@ -14,12 +14,19 @@ protocol=http://
 
 
 .PHONY:
-	clean
-	db
-	update
+	wp
 	plugins
+	submodules
 	themes
-	install
+	uninstall
+	uninstall_plugins
+	uninstall_themes
+	update
+	db
+	wpconfig
+	clean
+
+
 
 all: update 
 
@@ -44,14 +51,13 @@ plugins:
 	&& wget https://downloads.wordpress.org/plugin/wp-email-login.zip \
 	&& unzip -o ./wp-email-login.zip && rm ./wp-email-login.zip \
 	&& wget https://downloads.wordpress.org/plugin/timber-library.zip \
-	&& unzip -o ./timber-library.zip && rm ./timber-library.zip.zip \
+	&& unzip -o ./timber-library.zip && rm ./timber-library.zip \
 
 submodules:
 	cd ./${dir_name}/c/lib \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
-	#&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-members-authentication-bridge \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-ip.board-user-bridge \
