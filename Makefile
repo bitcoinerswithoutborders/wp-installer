@@ -27,7 +27,7 @@ protocol=http://
 
 all: update 
 
-install: wp plugins submodules wpconfig update db
+install: wp plugins submodules_init wpconfig update db
 
 uninstall: uninstall_plugins uninstall_themes
 
@@ -65,6 +65,10 @@ submodules:
 	&& git submodule add git@github.com:benhuson/countries \
 	&& git submodule update --init \
 	#missing here: membership
+	
+submodules_init:
+	cd ./${dir_name} \
+	&& git submodule update --init
 
 themes:
 	cd ./${dir_name}/c/themes \
