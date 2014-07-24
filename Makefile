@@ -11,6 +11,16 @@ members_url=mem.bers
 whiteboard_url=n.ew
 protocol=http://
 
+
+salts=$(shell cat salts.html)
+
+all: update 
+
+install: wp plugins submodules_init wpconfig update db
+
+uninstall: uninstall_plugins uninstall_themes
+
+
 .PHONY:
 	wp
 	plugins
@@ -23,13 +33,6 @@ protocol=http://
 	db
 	wpconfig
 	clean
-
-
-all: update 
-
-install: wp plugins submodules_init wpconfig update db
-
-uninstall: uninstall_plugins uninstall_themes
 
 
 
@@ -120,7 +123,9 @@ db:
 	cp db.sql build/db.sql
 	sed -i \
 		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
-		-e "s%|site_url|%${site_url}%g" \
+		-e "s%|root_url|%${root_url}%g" \
+		-e "s%|members_url|%${members_url}%g" \
+		-e "s%|whiteboard_url|%${whiteboard_url}%g" \
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
 		build/db.sql
@@ -128,28 +133,34 @@ db:
 	mysql -u root < build/db.sql
 
 wpconfig:
-	echo "wpconfig is not working correctly. look into ${dir_name}/wp-config.php at the auth keys."
+	mkdir -p build
+	error="wpconfig is not working correctly. look into ${dir_name}/wp-config.php at the auth keys."
 
 	cp ${dir_name}/wp-config-sample.php ${dir_name}/wp-config.php
 
+	# get salts from wordpress
+
+	cp salts.php build/salts.php
 	sed -i \
-		-e "s%|AUTH_KEY|%define('AUTH_KEY', '${shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+'}');%" \
-		-e "s%|SECURE_AUTH_KEY|%define('SECURE_AUTH_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|LOGGED_IN_KEY|%define('LOGGED_IN_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|NONCE_KEY|%define('NONCE_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|AUTH_SALT|%define('AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|SECURE_AUTH_SALT|%define('SECURE_AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
-		-e "s%|LOGGED_IN_SALT|%define('LOGGED_IN_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
-		-e "s%|NONCE_SALT|%define('NONCE_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
-		-e "s%|site_url|%${site_url}%g" \
-		-e "s%|database_name|%${database_name}%g" \
-		-e "s%|database_user|%${database_user}%g" \
-		-e "s%|database_pw|%${database_pw}%g" \
-		-e "s%|database_host|%${database_host}%g" \
-		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
+		-e "s%|dir_name|%${dir_name}%g" \
+		build/salts.php
+	
+	php -f build/salts.php
+
+	
+	#read file and replace the salts using sed again
+	
+	sed -i \
+		-e "s%|root_url|%${root_url}%g" \
+		-e "s%|members_url|%${members_url}%g" \
+		-e "s%|whiteboard_url|%${whiteboard_url}%g" \
+		-e "s/|database_name|/${database_name}/g" \
+		-e "s/|database_user|/${database_user}/g" \
+		-e "s/|database_pw|/${database_pw}/g" \
+		-e "s/|database_host|/${database_host}/g" \
+		-e "s/|database_table_prefix|/${database_table_prefix}/g" \
 		${dir_name}/wp-config.php
-	
-	
+
 clean:
 	rm -rf ./${dir_name} ./build
 
