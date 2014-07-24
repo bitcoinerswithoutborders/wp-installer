@@ -35,12 +35,19 @@ uninstall: uninstall_plugins uninstall_themes
 	wpconfig
 	clean
 
-
-
 wp:
 	mkdir -p ${dir_name}
 	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
+	
+static:
 	mkdir -p ${dir_name}/static
+
+	cd ${dir_name}/static/ \
+	&& scp -r root@mercury.bitcoinfoundation.org:/var/www/bitcoinfoundation.org/static/* .
+
+	cd ${dir_name}/c/lib/ \
+	&& scp -r root@mercury.bitcoinfoundation.org:/var/www/bitcoinfoundation.org/c/lib/membership/ .
+
 	sudo chown ${user}:${user} ${dir_name}/static
 	
 
@@ -58,8 +65,6 @@ plugins:
 	&& unzip -o ./wordpress-mu-domain-mapping.0.5.4.3.zip && rm ./wordpress-mu-domain-mapping.0.5.4.3.zip \
 	&& wget https://downloads.wordpress.org/plugin/wp-email-login.zip \
 	&& unzip -o ./wp-email-login.zip && rm ./wp-email-login.zip \
-	&& wget https://downloads.wordpress.org/plugin/timber-library.zip \
-	&& unzip -o ./timber-library.zip && rm ./timber-library.zip \
 
 submodules:
 	cd ./${dir_name}/c/lib \
@@ -67,6 +72,7 @@ submodules:
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-members-authentication-bridge \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-ip.board-user-bridge \
 	&& git submodule add git@github.com:benhuson/countries \
