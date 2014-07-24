@@ -10,6 +10,7 @@ root_url=er.is
 members_url=mem.bers
 whiteboard_url=n.ew
 protocol=http://
+user=apache
 
 
 salts=$(shell cat salts.html)
@@ -39,6 +40,9 @@ uninstall: uninstall_plugins uninstall_themes
 wp:
 	mkdir -p ${dir_name}
 	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
+	mkdir -p ${dir_name}/static
+	sudo chown ${user}:${user} ${dir_name}/static
+	
 
 plugins:
 	cd ./${dir_name}/c/lib \
@@ -122,6 +126,7 @@ db:
 
 	cp db.sql build/db.sql
 	sed -i \
+		-e "s%|database_name|%${database_name}%g" \
 		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
 		-e "s%|root_url|%${root_url}%g" \
 		-e "s%|members_url|%${members_url}%g" \
