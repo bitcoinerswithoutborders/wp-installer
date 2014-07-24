@@ -127,6 +127,7 @@ db:
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
 		-e "s%|database_host|%${database_host}%g" \
+		-e "s%|protocol|%${protocol}%g" \
 		build/db.php
 	php -f build/db.php
 
@@ -139,6 +140,7 @@ db:
 		-e "s%|whiteboard_url|%${whiteboard_url}%g" \
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
+		-e "s%|protocol|%${protocol}%g" \
 		build/db.sql
 
 	mysql -u root < build/db.sql
