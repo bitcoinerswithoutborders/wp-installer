@@ -138,18 +138,15 @@ wpconfig:
 
 	cp ${dir_name}/wp-config-sample.php ${dir_name}/wp-config.php
 
-	# get salts from wordpress
-
+	# get salts from wordpress and replace in wp-config using php script
 	cp salts.php build/salts.php
 	sed -i \
 		-e "s%|dir_name|%${dir_name}%g" \
 		build/salts.php
-	
+
 	php -f build/salts.php
 
-	
-	#read file and replace the salts using sed again
-	
+
 	sed -i \
 		-e "s%|root_url|%${root_url}%g" \
 		-e "s%|members_url|%${members_url}%g" \
