@@ -74,10 +74,13 @@ uninstall_plugins:
 		./regenerate-thumbnails \
 		./wordpress-mu-domain-mapping \
 		./wp-email-login \
+		./timber-library \
+
+uninstall_submodules:
+	cd ./${dir_name}/c/lib \
 	&& git submodule deinit bwb-admin \
 	&& git submodule deinit bwb-members \
 	&& git submodule deinit bwb-staff \
-	&& git submodule deinit timber \
 	&& git submodule deinit wp-less \
 	&& git submodule deinit wp-members-authentication-bridge \
 	&& git submodule deinit wp-ip.board-user-bridge \
