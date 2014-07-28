@@ -1,3 +1,4 @@
 *.sql
 wp
 build
+|dir_name|
