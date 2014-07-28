@@ -8,7 +8,7 @@ database_name=db_name_2305
 database_table_prefix=db_table_prefix_
 root_url=er.is
 members_url=mem.bers
-whiteboard_url=n.ew
+new_url=n.ew
 protocol=http://
 user=apache
 
@@ -140,7 +140,7 @@ db:
 		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
 		-e "s%|root_url|%${root_url}%g" \
 		-e "s%|members_url|%${members_url}%g" \
-		-e "s%|whiteboard_url|%${whiteboard_url}%g" \
+		-e "s%|new_url|%${new_url}%g" \
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
 		-e "s%|protocol|%${protocol}%g" \
@@ -166,7 +166,7 @@ wpconfig:
 	sed -i \
 		-e "s%|root_url|%${root_url}%g" \
 		-e "s%|members_url|%${members_url}%g" \
-		-e "s%|whiteboard_url|%${whiteboard_url}%g" \
+		-e "s%|new_url|%${new_url}%g" \
 		-e "s/|database_name|/${database_name}/g" \
 		-e "s/|database_user|/${database_user}/g" \
 		-e "s/|database_pw|/${database_pw}/g" \
