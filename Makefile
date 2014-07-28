@@ -9,39 +9,61 @@ database_table_prefix=db_table_prefix_
 root_url=er.is
 members_url=mem.bers
 whiteboard_url=n.ew
-
 protocol=http://
+user=apache
 
 
-.PHONY:
-	clean
-	db
-	update
-	plugins
-	themes
-	install
+salts=$(shell cat salts.html)
 
 all: update 
 
-install: wp plugins wpconfig update db
+install: wp plugins submodules_init wpconfig update db
+
+uninstall: uninstall_plugins uninstall_themes
+
+
+.PHONY:
+	wp
+	plugins
+	submodules
+	themes
+	uninstall
+	uninstall_plugins
+	uninstall_themes
+	update
+	db
+	wpconfig
+	clean
 
 wp:
 	mkdir -p ${dir_name}
 	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
+	
+static:
+	mkdir -p ${dir_name}/static
+
+	cd ${dir_name}/static/ \
+	&& scp -r root@mercury.bitcoinfoundation.org:/var/www/bitcoinfoundation.org/static/* .
+
+	cd ${dir_name}/c/lib/ \
+	&& scp -r root@mercury.bitcoinfoundation.org:/var/www/bitcoinfoundation.org/c/lib/membership/ .
+
+	sudo chown ${user}:${user} ${dir_name}/static
+	
 
 plugins:
 	cd ./${dir_name}/c/lib \
 	&& wget https://downloads.wordpress.org/plugin/buddypress.2.0.1.zip \
 	&& unzip -o ./buddypress.2.0.1.zip && rm ./buddypress.2.0.1.zip \
-	&& wget http://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
+	&& wget https://downloads.wordpress.org/plugin/advanced-custom-fields.zip \
 	&& unzip -o ./advanced-custom-fields.zip && rm ./advanced-custom-fields.zip \
-	&& wget http://downloads.wordpress.org/plugin/webriti-smtp-mail.1.2.zip \
+	&& wget https://downloads.wordpress.org/plugin/webriti-smtp-mail.1.2.zip \
 	&& unzip -o ./webriti-smtp-mail.1.2.zip && rm ./webriti-smtp-mail.1.2.zip \
-	&& wget http://downloads.wordpress.org/plugin/regenerate-thumbnails.zip \
+	&& wget https://downloads.wordpress.org/plugin/regenerate-thumbnails.zip \
 	&& unzip -o ./regenerate-thumbnails.zip && rm ./regenerate-thumbnails.zip \
-	&& wget http://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
+	&& wget https://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
 	&& unzip -o ./wordpress-mu-domain-mapping.0.5.4.3.zip && rm ./wordpress-mu-domain-mapping.0.5.4.3.zip \
-	&& wget http://downloads.wordpress.org/plugin/wp-email-login.zip \
+	&& wget https://downloads.wordpress.org/plugin/wp-email-login.zip \
 	&& unzip -o ./wp-email-login.zip && rm ./wp-email-login.zip \
 
 submodules:
@@ -49,20 +71,24 @@ submodules:
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
+	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-members-authentication-bridge \
 	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-ip.board-user-bridge \
+	&& git submodule add git@github.com:benhuson/countries \
 	&& git submodule update --init \
-	#missing here: logout-redirect, membership
+	#missing here: membership
 	
+submodules_init:
+	cd ./${dir_name} \
+	&& git submodule update --init
+
 themes:
 	cd ./${dir_name}/c/themes \
 	&& git submodule add -b members git@github.com:bitcoinfoundation/btcf_classic 
 	&& git submodule add -b members git@github.com:bitcoinfoundation/bwb-bp-theme bwbmembers \
 
 
-uninstall: uninstall_plugins uninstall_themes
 
 
 uninstall_plugins:
@@ -104,42 +130,50 @@ db:
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
 		-e "s%|database_host|%${database_host}%g" \
+		-e "s%|protocol|%${protocol}%g" \
 		build/db.php
 	php -f build/db.php
 
 	cp db.sql build/db.sql
 	sed -i \
+		-e "s%|database_name|%${database_name}%g" \
 		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
-		-e "s%|site_url|%${site_url}%g" \
+		-e "s%|root_url|%${root_url}%g" \
+		-e "s%|members_url|%${members_url}%g" \
+		-e "s%|whiteboard_url|%${whiteboard_url}%g" \
 		-e "s%|database_user|%${database_user}%g" \
 		-e "s%|database_pw|%${database_pw}%g" \
+		-e "s%|protocol|%${protocol}%g" \
 		build/db.sql
 
 	mysql -u root < build/db.sql
 
 wpconfig:
-	echo "wpconfig is not working correctly. look into ${dir_name}/wp-config.php at the auth keys."
+	mkdir -p build
+	error="wpconfig is not working correctly. look into ${dir_name}/wp-config.php at the auth keys."
 
 	cp ${dir_name}/wp-config-sample.php ${dir_name}/wp-config.php
 
+	# get salts from wordpress and replace in wp-config using php script
+	cp salts.php build/salts.php
 	sed -i \
-		-e "s%|AUTH_KEY|%define('AUTH_KEY', '${shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+'}');%" \
-		-e "s%|SECURE_AUTH_KEY|%define('SECURE_AUTH_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|LOGGED_IN_KEY|%define('LOGGED_IN_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|NONCE_KEY|%define('NONCE_KEY', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|AUTH_SALT|%define('AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!#^&*-_=+')');%" \
-		-e "s%|SECURE_AUTH_SALT|%define('SECURE_AUTH_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
-		-e "s%|LOGGED_IN_SALT|%define('LOGGED_IN_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
-		-e "s%|NONCE_SALT|%define('NONCE_SALT', '$(shell makepasswd -m 64 -c 'A-Za-z0-9~!@#^&*-_=+')');%" \
-		-e "s%|site_url|%${site_url}%g" \
-		-e "s%|database_name|%${database_name}%g" \
-		-e "s%|database_user|%${database_user}%g" \
-		-e "s%|database_pw|%${database_pw}%g" \
-		-e "s%|database_host|%${database_host}%g" \
-		-e "s%|database_table_prefix|%${database_table_prefix}%g" \
+		-e "s%|dir_name|%${dir_name}%g" \
+		build/salts.php
+
+	php -f build/salts.php
+
+
+	sed -i \
+		-e "s%|root_url|%${root_url}%g" \
+		-e "s%|members_url|%${members_url}%g" \
+		-e "s%|whiteboard_url|%${whiteboard_url}%g" \
+		-e "s/|database_name|/${database_name}/g" \
+		-e "s/|database_user|/${database_user}/g" \
+		-e "s/|database_pw|/${database_pw}/g" \
+		-e "s/|database_host|/${database_host}/g" \
+		-e "s/|database_table_prefix|/${database_table_prefix}/g" \
 		${dir_name}/wp-config.php
-	
-	
+
 clean:
 	rm -rf ./${dir_name} ./build
 
