@@ -65,6 +65,8 @@ plugins:
 	&& unzip -o ./wordpress-mu-domain-mapping.0.5.4.3.zip && rm ./wordpress-mu-domain-mapping.0.5.4.3.zip \
 	&& wget https://downloads.wordpress.org/plugin/wp-email-login.zip \
 	&& unzip -o ./wp-email-login.zip && rm ./wp-email-login.zip \
+	&& wget http://downloads.wordpress.org/plugin/dbview.zip \
+	&& unzip -o ./dbview.zip && rm ./dbview.zip \
 
 submodules:
 	cd ./${dir_name}/c/lib \
