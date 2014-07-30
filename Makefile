@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dir_name=wp
-database_user=db_user
+database_user=wp
 database_pw=
 database_host=localhost
 database_name=wp_db_2305
@@ -11,12 +11,14 @@ members_url=mem.bers
 new_url=n.ew
 protocol=http://
 user=www-data
-ssh_host=ssh_host
-ssh_user=ssh_user
-ssh_dir=ssh_dir
-uploads_dir=static
+ssh_host=
+ssh_user=
+ssh_dir=
+uploads_dir=
 debug=false
-sqlite_db_lib=sqlite_db_lib
+sqlite_db_user=
+sqlite_db_host=
+sqlite_db_lib=
 
 salts=$(shell cat salts.html)
 
@@ -53,7 +55,7 @@ static:
 	cd ${dir_name}/c/lib/ \
 	&& scp -r ${ssh_user}@${ssh_host}:${ssh_dir}/c/lib/membership/ .
 
-	scp -r ${ssh_user}@${ssh_host}:${sqlite_db_dir} ./${dir_name}/c/lib/bwb-members-migration/assets/
+	scp -r ${sqlite_db_user}@${sqlite_db_host}:${sqlite_db_dir} ./${dir_name}/c/lib/bwb-members-migration/assets/sqlite.db
 
 
 	sudo chown -R ${user}:${user} ${dir_name}/${uploads_dir}
