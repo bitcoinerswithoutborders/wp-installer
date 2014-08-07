@@ -1,11 +1,11 @@
 #!/bin/bash
 
 dir_name=wp
-database_user=wp
+database_user=root
 database_pw=
 database_host=localhost
 database_name=wp_db_2305
-database_table_prefix=db_fn_
+database_table_prefix=wp_db_
 root_url=ma.ke
 members_url=mem.bers
 new_url=n.ew
@@ -14,13 +14,12 @@ user=www-data
 ssh_host=
 ssh_user=
 ssh_dir=
-uploads_dir=
+uploads_dir=static
 debug=false
-sqlite_db_user=
+sqlite_db_user=root
 sqlite_db_host=
 sqlite_db_lib=
-
-salts=$(shell cat salts.html)
+git_repo=
 
 all: update 
 
@@ -44,7 +43,7 @@ uninstall: uninstall_plugins uninstall_themes
 
 wp:
 	mkdir -p ${dir_name}
-	git clone git@github.com:bitcoinerswithoutborders/wp ${dir_name}
+	git clone ${git_repo} ${dir_name}
 	
 static:
 	mkdir -p ${dir_name}/${uploads_dir}
@@ -72,27 +71,12 @@ plugins:
 	&& unzip -o ./regenerate-thumbnails.zip && rm ./regenerate-thumbnails.zip \
 	&& wget https://downloads.wordpress.org/plugin/wordpress-mu-domain-mapping.0.5.4.3.zip \
 	&& unzip -o ./wordpress-mu-domain-mapping.0.5.4.3.zip && rm ./wordpress-mu-domain-mapping.0.5.4.3.zip \
-	&& wget http://downloads.wordpress.org/plugin/dbview.zip \
-	&& unzip -o ./dbview.zip && rm ./dbview.zip \
 	&& wget http://downloads.wordpress.org/plugin/advanced-cron-manager.1.2.zip \
 	&& unzip -o ./advanced-cron-manager.1.2.zip && rm ./advanced-cron-manager.1.2.zip \
 	&& wget http://downloads.wordpress.org/plugin/adminer.1.3.0.zip \
 	&& unzip -o ./adminer.1.3.0.zip && rm ./adminer.1.3.0.zip \
 	&& wget http://downloads.wordpress.org/plugin/wordpress-importer.0.6.1.zip \
 	&& unzip -o ./wordpress-importer.0.6.1.zip && rm ./wordpress-importer.0.6.1.zip \
-
-submodules:
-	cd ./${dir_name}/c/lib \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-admin \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-members \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/bwb-staff \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-less \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/timber \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-members-authentication-bridge \
-	&& git submodule add git@github.com:bitcoinerswithoutborders/wp-ip.board-user-bridge \
-	&& git submodule add git@github.com:benhuson/countries \
-	&& git submodule update --init \
-	
 
 submodules_init:
 	cd ./${dir_name} \

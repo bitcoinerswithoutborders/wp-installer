@@ -3,3 +3,9 @@ wp
 build
 bitcoinfoundation.org
 backup
+api
+Makefile_mercury_userdata_ignored
+Makefile_commit
+logo.png
+logo.xcf
+
